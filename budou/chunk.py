@@ -222,9 +222,15 @@ class ChunkList(collections.MutableSequence):
   def resolve_dependencies(self):
     """Resolves chunk dependency by concatenating them.
     """
-    self._concatenate_inner(True)
+    self._fix_affix()
+    self._concatenate_inner(False)
     self._concatenate_inner(False)
     self._insert_breaklines()
+
+  def _fix_affix(self):
+    for chunk in self:
+      if chunk.pos=="AFFIX":
+        chunk.dependency=None
 
   def _concatenate_inner(self, direction):
     """Concatenates chunks based on each chunk's dependency.
